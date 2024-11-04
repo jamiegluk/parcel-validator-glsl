@@ -469,7 +469,7 @@
   dependencies:
     detect-libc "^1.0.3"
 
-"@parcel/types@2.12.0":
+"@parcel/types@2.12.0", "@parcel/types@^2.12.0":
   version "2.12.0"
   resolved "https://registry.yarnpkg.com/@parcel/types/-/types-2.12.0.tgz#caf0af00ee0c7228b350eca5f4d3a5b85ce457ad"
   integrity sha512-8zAFiYNCwNTQcglIObyNwKfRYQK5ELlL13GuBOrSMxueUiI5ylgsGbTS1N7J3dAGZixHO8KhHGv5a71FILn9rQ==
