@@ -66,7 +66,7 @@
   },
   "scripts": {
     "start": "build --watch",
-    "build": "run-s lint:bin clean:dist build:*",
+    "build": "run-s clean:dist build:*",
     "build:esm": "tsup --format esm",
     "build:cjs": "tsup --format cjs",
     "clean": "run-s clean:*",
@@ -115,6 +115,7 @@
   "dependencies": {
     "@parcel/core": "^2.12.0",
     "@parcel/plugin": "^2.12.0",
-    "glslang-validator-prebuilt-predownloaded": "^0.0.2"
+    "glslang-validator-prebuilt-predownloaded": "^0.0.2",
+    "source-map-support": "^0.5.21"
   }
 }
