@@ -1,0 +1,121 @@
+{
+  "root": true,
+  "env": {
+    "node": true,
+    "jest": true,
+    "es2022": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:n/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "plugin:promise/recommended",
+    "plugin:eslint-comments/recommended",
+    "plugin:json/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:yml/standard",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 13,
+    "sourceType": "module",
+    "project": ["tsconfig.json"],
+    "extraFileExtensions": [".json", "ts"]
+  },
+  "plugins": [
+    "import",
+    "@typescript-eslint",
+    "ban",
+    "promise",
+    "json",
+    "prettier"
+  ],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "prettier/prettier": "warn",
+    "@typescript-eslint/ban-ts-comment": 0,
+    "@typescript-eslint/explicit-module-boundary-types": [
+      "warn",
+      {
+        "allowedNames": ["render"]
+      }
+    ],
+    "@typescript-eslint/no-non-null-assertion": 0, // This is needed when strict null checks on, as TS sometimes gets it wrong
+    "@typescript-eslint/no-var-requires": 0,
+    "eslint-comments/require-description": "error",
+    "import/no-named-as-default": 0, // This is a feature, not a bug
+    "n/no-extraneous-import": 0,
+    "n/no-extraneous-require": 0,
+    "n/no-unpublished-require": 0,
+    "react/prop-types": 0,
+    "promise/always-return": 0, // Silly rule
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {
+        "checksVoidReturn": false // idk
+      }
+    ],
+    "id-denylist": [
+      "error",
+      "any",
+      "unknown",
+      "number",
+      "String",
+      "undefined",
+      "Number",
+      "Boolean",
+      "Undefined",
+      "string",
+      "boolean"
+    ],
+    "no-invalid-this": 0, // Disabled to avoid conflicts with next rule
+    "@typescript-eslint/no-invalid-this": "error",
+    "spaced-comment": [
+      "error",
+      "always",
+      {
+        "markers": ["/"]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.mjs"],
+      "rules": {
+        "import/no-unresolved": 0, // TS already does this
+        "n/no-missing-import": 0, // TS already does this
+        "n/no-unpublished-import": 0, // TS already does this
+        "n/no-unsupported-features/es-syntax": 0 // This is supported in TS, so allow it
+      }
+    },
+    {
+      "files": ["./src/cli.ts"],
+      "rules": {
+        "n/shebang": 0 // This file does need a shebang
+      }
+    },
+    {
+      "files": ["*.json"],
+      "extends": ["plugin:@typescript-eslint/disable-type-checked"],
+      "rules": {
+        "json/*": [
+          "error",
+          {
+            "allowComments": true
+          }
+        ]
+      }
+    }
+  ]
+}
