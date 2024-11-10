@@ -35,7 +35,7 @@ export default new Validator({
     validator = require.resolve(validator);
 
     // Add standard arguments and options
-    const cmd = `"${validator}" -l -Dvalidate "${asset.filePath}"`;
+    const cmd = `"${validator}" -l -DVALIDATE "${asset.filePath}"`;
 
     try {
       const { stdout, stderr } = await execAsync(cmd);
