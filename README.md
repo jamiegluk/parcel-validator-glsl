@@ -41,7 +41,7 @@ Add "parcel-validator-glsl" validator to your _.parcelrc_ file:
 
 ## Configuration
 
-This plugin supports a configuration file in the root of your repo called "parcel-validator-glsl.config.json" or "parcel-validator-glsl.config.js".
+This plugin supports a configuration file in the root of your repo called _parcel-validator-glsl.config.json_ or _parcel-validator-glsl.config.js_.
 
 ### GLSL Version
 
@@ -51,7 +51,7 @@ GLSL files are validated as version 1.10 by default. You can change the version 
 
    If you do this, you may also wish to use the [parcel-optimizer-glsl-remove-version](https://www.npmjs.com/package/parcel-optimizer-glsl-remove-version) package to avoid `#version directive must occur before anything else, except for comments and white space` errors.
 
-2. Set the "glslVersion" config in "parcel-validator-glsl.config.json":
+2. Set the "glslVersion" config in _parcel-validator-glsl.config.json_:
 
 ```json
 {
@@ -61,21 +61,49 @@ GLSL files are validated as version 1.10 by default. You can change the version 
 
 ### Three.js
 
-This plugin has inbuilt support for Three.js. This ensures the uniforms and attributes that `ShaderMaterial` prepends to your shaders are known to the validator. You can see a list of these in the [Three documentation](https://threejs.org/docs/index.html#api/en/renderers/webgl/WebGLProgram).
+This plugin has inbuilt support for [Three.js](https://threejs.org/). This ensures the uniforms and attributes that `ShaderMaterial` prepends to your shaders are known to the validator. You can see a list of these in the [Three documentation](https://threejs.org/docs/index.html#api/en/renderers/webgl/WebGLProgram).
 
-Set the "threeIntegration" config in "parcel-validator-glsl.config.json":
+You can implement this using either of these methods:
 
-```json
-{
-  "threeIntegration": true
-}
-```
+1. **Opt-in files with a comment:** \
+   Add this comment anywhere in the shader file:
+   ```glsl
+   // parcel-validator-glsl three
+   ```
+2. **Apply to all files with a config:** \
+   Set the "threeIntegration" config in _parcel-validator-glsl.config.json_:
+   ```json
+   {
+     "threeIntegration": true
+   }
+   ```
+   You can exclude shaders that use `RawShaderMaterial` from this by adding this comment anywhere in the shader file:
+   ```glsl
+   // parcel-validator-glsl no-three
+   ```
 
-You can exclude shaders that use `RawShaderMaterial` from this by adding this comment anywhere in the shader file:
+### THREE-CustomShaderMaterial
 
-```glsl
-// parcel-validator-glsl raw
-```
+This plugin has inbuilt support for [THREE-CustomShaderMaterial](https://github.com/FarazzShaikh/THREE-CustomShaderMaterial). This ensures the uniforms and attributes that `CustomShaderMaterial` injects into your shaders are known to the validator. You can see a list of these in the [CSM documentation](https://github.com/FarazzShaikh/THREE-CustomShaderMaterial?tab=readme-ov-file#output-variables).
+
+You can implement this using either of these methods:
+
+1. **Opt-in files with a comment:** \
+   Add this comment anywhere in the shader file:
+   ```glsl
+   // parcel-validator-glsl csm
+   ```
+2. **Apply to all files with a config:** \
+   Set the "csmIntegration" config in _parcel-validator-glsl.config.json_:
+   ```json
+   {
+     "csmIntegration": true
+   }
+   ```
+   You can exclude shaders that don't use `CustomShaderMaterial` from this by adding this comment anywhere in the shader file:
+   ```glsl
+   // parcel-validator-glsl no-csm
+   ```
 
 <br/>
 
