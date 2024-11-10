@@ -44,6 +44,9 @@ next-env.d.ts
 # Optional eslint cache
 .eslintcache
 
+# Optional Parcel cache
+.parcel-cache
+
 # Optional REPL history
 .node_repl_history
 
