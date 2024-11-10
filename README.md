@@ -47,17 +47,19 @@ This plugin supports a configuration file in the root of your repo called _parce
 
 GLSL files are validated as version 1.10 by default. You can change the version using either of these methods:
 
-1. Add a `#version` directive at the top of your .glsl files, ie. `#version 130`. See [this documentation](<https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)#Version>) for more info.
+1. **Specific files via a comment:** \
+   Add a `#version` directive at the top of your . glsl files, ie. `#version 130`. See [this documentation](<https://www.khronos.org/opengl/ wiki/Core_Language_(GLSL)#Version>) for more info.
 
    If you do this, you may also wish to use the [parcel-optimizer-glsl-remove-version](https://www.npmjs.com/package/parcel-optimizer-glsl-remove-version) package to avoid `#version directive must occur before anything else, except for comments and white space` errors.
 
-2. Set the "glslVersion" config in _parcel-validator-glsl.config.json_:
+2. **Apply to all files with a config:** \
+   Set the "glslVersion" config in _parcel-validator-glsl.config.json_:
 
-```json
-{
-  "glslVersion": 130
-}
-```
+   ```json
+   {
+     "glslVersion": 130
+   }
+   ```
 
 ### Three.js
 
