@@ -39,6 +39,20 @@ Add "parcel-validator-glsl" validator to your _.parcelrc_ file:
 }
 ```
 
+## Adding code only run during validation
+
+A `VALIDATE` pre-processor macro is defined when running the validator.
+
+If you wish to include code in your GLSL files that should only run during validation (ie. to define variables that exist at runtime, but would not otherwise be known to the validator), then you can check this constant, eg.:
+
+```glsl
+#ifdef VALIDATE
+  uniform vec2 uv;
+#endif
+```
+
+This is useful for things like Three.js shaders, that may prepend your GLSL files with additional code during compilation. However, additional specific support is available in this plugin to handle this use case for you, see below.
+
 ## Configuration
 
 This plugin supports a configuration file in the root of your repo called _parcel-validator-glsl.config.json_ or _parcel-validator-glsl.config.js_.
