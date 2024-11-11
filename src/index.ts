@@ -118,6 +118,8 @@ export default new Validator({
               {
                 origin: "parcel-validator-glsl",
                 message: escapeMarkdown(message),
+                documentationURL:
+                  "https://www.khronos.org/opengl/wiki/Core_Language_%28GLSL%29",
                 codeFrames: [
                   {
                     filePath: asset.filePath,
