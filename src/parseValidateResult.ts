@@ -4,12 +4,14 @@ import {
   escapeMarkdown,
 } from "@parcel/diagnostic";
 import { Asset, ValidateResult } from "@parcel/types";
+import regexEscape from "regex-escape";
 
 import { name } from "~/package.json";
 
 function parseCodeHighlightsByRegex(
   createRegex: () => RegExp,
   message: string,
+  lineOffset: number,
 ): [codeHighlights: DiagnosticCodeHighlight[], message: string] {
   // Match regex
   const matches = Array.from(message.matchAll(createRegex()));
@@ -17,7 +19,10 @@ function parseCodeHighlightsByRegex(
   // Get issues from regex match groups
   let issues: [line: number, message: string][] = matches.map(
     // TODO Offset line from appended code
-    ([, , line, msg]) => [parseInt(line!, 10), msg || "Unknown issue"],
+    ([, , line, msg]) => [
+      parseInt(line!, 10) - lineOffset,
+      msg || "Unknown issue",
+    ],
   );
 
   // Merge issues that are on the same line
@@ -55,9 +60,11 @@ function parseDiagnosticByRegex(
   message: string,
   asset: Asset,
   code: string,
+  filePath: string,
+  lineOffset: number,
 ): Diagnostic | null {
   // Parse issues
-  const parsed = parseCodeHighlightsByRegex(createRegex, message);
+  const parsed = parseCodeHighlightsByRegex(createRegex, message, lineOffset);
   const [codeHighlights] = parsed;
   message = parsed[1];
 
@@ -67,6 +74,12 @@ function parseDiagnosticByRegex(
 
   // Strip out "No code generated" message, as it's misleading, we aren't generating code here
   message = message.replace("No code generated.", "");
+
+  // Strip out file path from message, as code highlights contain it already
+  message = message.replaceAll(
+    new RegExp(`^${regexEscape(filePath)}$`, "gm"),
+    "",
+  );
 
   // Trim excess whitespace
   message = message
@@ -96,6 +109,8 @@ export function parseValidateResult(
   message: string,
   asset: Asset,
   code: string,
+  filePath: string,
+  lineOffset: number,
 ): ValidateResult {
   // Return parsed message, errors and warnings
   const warning = parseDiagnosticByRegex(
@@ -103,12 +118,16 @@ export function parseValidateResult(
     message,
     asset,
     code,
+    filePath,
+    lineOffset,
   );
   const error = parseDiagnosticByRegex(
     () => /^ERROR: (.+):(\d+): (.+)$/gm,
     message,
     asset,
     code,
+    filePath,
+    lineOffset,
   );
   return {
     warnings: warning ? [warning] : [],

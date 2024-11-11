@@ -6,6 +6,7 @@ import { exec } from "child_process";
 import { createRequire } from "module";
 import { Config, DEFAULT_CONFIG, validateConfig } from "./config";
 import { parseValidateResult } from "./parseValidateResult";
+import { augmentCodeToFile } from "./augmentCodeToFile";
 
 // Workaround https://github.com/parcel-bundler/parcel/issues/6925#issuecomment-1003935487
 const req = createRequire(__dirname);
@@ -49,7 +50,7 @@ export default new Validator({
     return config;
   },
 
-  async validate({ asset, logger, config: _config }) {
+  async validate({ asset, logger, config: _config, options }) {
     const config = _config as Readonly<Required<Config>>;
 
     // Get OS independent path to validator
@@ -77,9 +78,15 @@ export default new Validator({
 
     // TODO append to code
     const code = await asset.getCode();
+    const [filePath, lineOffset] = await augmentCodeToFile(
+      asset,
+      config,
+      options,
+      code,
+    );
 
     // Add standard arguments and options
-    const cmd = `"${validator}" -l -DVALIDATE ${config.commandArguments} "${asset.filePath}"`;
+    const cmd = `"${validator}" -l -DVALIDATE ${config.commandArguments} "${filePath}"`;
 
     // Run the glslValidator command and handle the output
     return new Promise((resolve) => {
@@ -99,11 +106,17 @@ export default new Validator({
             .join("\n");
         }
         // Parse errors and warnings
-        const result = parseValidateResult(message, asset, code);
+        const result = parseValidateResult(
+          message,
+          asset,
+          code,
+          filePath,
+          lineOffset,
+        );
 
         // Handle any output in the case no errors or warnings could be parsed
         if (result.errors.length === 0 && result.warnings.length === 0) {
-          if (stdout) {
+          if (stdout && stdout.trim() !== filePath) {
             logger.log({
               message: escapeMarkdown(stdout),
             });
