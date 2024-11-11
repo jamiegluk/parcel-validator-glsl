@@ -1,13 +1,9 @@
+import ThrowableDiagnostic, {
+  escapeMarkdown,
+} from "@parcel/diagnostic";
 import { Validator } from "@parcel/plugin";
-import ThrowableDiagnostic, { md as _md } from "@parcel/diagnostic";
 import { exec } from "child_process";
 import { createRequire } from "module";
-
-// Fix md typings
-const md = _md as unknown as (
-  template: TemplateStringsArray,
-  ...params: any[]
-) => string;
 
 // Workaround https://github.com/parcel-bundler/parcel/issues/6925#issuecomment-1003935487
 const req = createRequire(__dirname);
@@ -63,12 +59,12 @@ export default new Validator({
           // Validation passed, handle any output
           if (stdout) {
             logger.log({
-              message: md`${stdout}`,
+              message: escapeMarkdown(stdout),
             });
           }
           if (stderr) {
             logger.error({
-              message: md`${stderr}`,
+              message: escapeMarkdown(stderr),
             });
           }
         }
