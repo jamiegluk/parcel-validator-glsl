@@ -25,6 +25,11 @@ export default new Validator({
       // Observe changes to the config
       // @ts-expect-error -- type is missing, but function exists
       asset.invalidateOnFileChange(filePath);
+
+      // For whatever reason, the validator doesn't rerun when the file changes
+      // So manually request such
+      // @ts-expect-error -- type is missing, but function exists
+      asset.invalidateOnFileChange(asset.filePath);
     }
 
     // Load and validate the config
