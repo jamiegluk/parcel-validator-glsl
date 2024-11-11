@@ -1,4 +1,5 @@
 import ThrowableDiagnostic, {
+  DiagnosticCodeHighlight,
   escapeMarkdown,
 } from "@parcel/diagnostic";
 import { Validator } from "@parcel/plugin";
@@ -73,25 +74,61 @@ export default new Validator({
     // Resolve path to validator
     validator = req.resolve(validator);
 
+    // TODO append to code
+    const code = await asset.getCode();
+
     // Add standard arguments and options
     const cmd = `"${validator}" -l -DVALIDATE ${config.commandArguments} "${asset.filePath}"`;
 
     // Run the glslValidator command and handle the output
-    return new Promise((resolve, reject) => {
-      exec(cmd, (error, stdout, stderr) => {
+    return new Promise((resolve) => {
+      exec(cmd, async (error, stdout, stderr) => {
         if (error) {
           // Validation failed
-          const message =
+          let message =
             stdout || stderr
               ? ["GLSL Validation failed", stdout, stderr].join("\n")
               : error.message || "Unknown error";
-          reject(
-            new ThrowableDiagnostic({
-              diagnostic: {
-                message: message,
-              },
-            }),
+
+          // Parse code highlights
+          const createRegex = () => /^ERROR: (.+):(\d+): (.+)$/gm;
+          const matches = Array.from(message.matchAll(createRegex()));
+          const codeHighlights: DiagnosticCodeHighlight[] = matches.map(
+            ([, , line, err]) => {
+              // TODO Offset line from appended code
+              const start = { line: parseInt(line!, 10), column: 0 };
+              return { start, end: start, message: escapeMarkdown(err!) };
+            },
           );
+          message = message.replaceAll(createRegex(), "");
+
+          // Strip out "No code generated" message, as it's misleading, we aren't generating code here
+          message = message.replace("No code generated.", "");
+          // Trim excess whitespace
+          message = message
+            .split("\n")
+            .map((l) => l.trim())
+            .filter(Boolean)
+            .join("\n");
+
+          // Forward that validation failed
+          resolve({
+            warnings: [],
+            errors: [
+              {
+                origin: "parcel-validator-glsl",
+                message: escapeMarkdown(message),
+                codeFrames: [
+                  {
+                    filePath: asset.filePath,
+                    language: asset.type,
+                    code,
+                    codeHighlights,
+                  },
+                ],
+              },
+            ],
+          });
         } else {
           // Validation passed, handle any output
           if (stdout) {
