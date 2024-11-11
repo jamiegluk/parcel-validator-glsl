@@ -1,13 +1,11 @@
-import ThrowableDiagnostic, {
-  DiagnosticCodeHighlight,
-  escapeMarkdown,
-} from "@parcel/diagnostic";
+import ThrowableDiagnostic, { escapeMarkdown } from "@parcel/diagnostic";
 import { Validator } from "@parcel/plugin";
 // @ts-ignore -- Parcel can't seem to recognize the typings for this, but Typescript does
 import { loadConfig } from "@parcel/utils";
 import { exec } from "child_process";
 import { createRequire } from "module";
 import { Config, DEFAULT_CONFIG, validateConfig } from "./config";
+import { parseValidateResult } from "./parseValidateResult";
 
 // Workaround https://github.com/parcel-bundler/parcel/issues/6925#issuecomment-1003935487
 const req = createRequire(__dirname);
@@ -84,53 +82,12 @@ export default new Validator({
     return new Promise((resolve) => {
       exec(cmd, async (error, stdout, stderr) => {
         if (error) {
-          // Validation failed
-          let message =
+          // Validation failed, return errors and warnings
+          const message =
             stdout || stderr
               ? ["GLSL Validation failed", stdout, stderr].join("\n")
               : error.message || "Unknown error";
-
-          // Parse code highlights
-          const createRegex = () => /^ERROR: (.+):(\d+): (.+)$/gm;
-          const matches = Array.from(message.matchAll(createRegex()));
-          const codeHighlights: DiagnosticCodeHighlight[] = matches.map(
-            ([, , line, err]) => {
-              // TODO Offset line from appended code
-              const start = { line: parseInt(line!, 10), column: 0 };
-              return { start, end: start, message: escapeMarkdown(err!) };
-            },
-          );
-          message = message.replaceAll(createRegex(), "");
-
-          // Strip out "No code generated" message, as it's misleading, we aren't generating code here
-          message = message.replace("No code generated.", "");
-          // Trim excess whitespace
-          message = message
-            .split("\n")
-            .map((l) => l.trim())
-            .filter(Boolean)
-            .join("\n");
-
-          // Forward that validation failed
-          resolve({
-            warnings: [],
-            errors: [
-              {
-                origin: "parcel-validator-glsl",
-                message: escapeMarkdown(message),
-                documentationURL:
-                  "https://www.khronos.org/opengl/wiki/Core_Language_%28GLSL%29",
-                codeFrames: [
-                  {
-                    filePath: asset.filePath,
-                    language: asset.type,
-                    code,
-                    codeHighlights,
-                  },
-                ],
-              },
-            ],
-          });
+          resolve(parseValidateResult(message, asset, code));
         } else {
           // Validation passed, handle any output
           if (stdout) {
@@ -143,9 +100,10 @@ export default new Validator({
               message: escapeMarkdown(stderr),
             });
           }
-
-          // Forward that validation passed
-          resolve();
+          resolve({
+            errors: [],
+            warnings: [],
+          });
         }
       });
     });
