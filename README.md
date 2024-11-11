@@ -75,6 +75,18 @@ GLSL files are validated as version 1.10 by default. You can change the version 
    }
    ```
 
+### Additional Command Arguments
+
+You can define additional `glslangValidator` command line options and arguments by setting the "commandArguments" config in :
+
+```json
+{
+  "commandArguments": "-Dfoo --bar"
+}
+```
+
+See available options and arguments in the [glslangValidator documentation](https://manpages.debian.org/bullseye/glslang-tools/glslangValidator.1.en.html).
+
 ### Three.js
 
 This plugin has inbuilt support for [Three.js](https://threejs.org/). This ensures the uniforms and attributes that `ShaderMaterial` prepends to your shaders are known to the validator. You can see a list of these in the [Three documentation](https://threejs.org/docs/index.html#api/en/renderers/webgl/WebGLProgram).
