@@ -1,9 +1,16 @@
 import { Validator } from "@parcel/plugin";
-import ThrowableDiagnostic from "@parcel/diagnostic";
+import ThrowableDiagnostic, { md as _md } from "@parcel/diagnostic";
 import { exec } from "child_process";
-import { promisify } from "util";
+import { createRequire } from "module";
 
-const execAsync = promisify(exec);
+// Fix md typings
+const md = _md as unknown as (
+  template: TemplateStringsArray,
+  ...params: any[]
+) => string;
+
+// Workaround https://github.com/parcel-bundler/parcel/issues/6925#issuecomment-1003935487
+const req = createRequire(__dirname);
 
 /**
  * Parcel optimizer plugin to remove the #version directive from GLSL files.
@@ -11,8 +18,7 @@ const execAsync = promisify(exec);
 export default new Validator({
   async validate({ asset, logger }) {
     // Get OS independent path to validator
-    let validator =
-      "./node_modules/glslang-validator-prebuilt-predownloaded/bin/";
+    let validator = "glslang-validator-prebuilt-predownloaded/bin/";
     switch (process.platform) {
       case "darwin":
         validator += "glslangValidator.darwin";
@@ -32,33 +38,41 @@ export default new Validator({
     }
 
     // Resolve path to validator
-    validator = require.resolve(validator);
+    validator = req.resolve(validator);
 
     // Add standard arguments and options
     const cmd = `"${validator}" -l -DVALIDATE "${asset.filePath}"`;
 
-    try {
-      const { stdout, stderr } = await execAsync(cmd);
+    // Run the glslValidator command and handle the output
+    return new Promise((resolve, reject) => {
+      exec(cmd, (error, stdout, stderr) => {
+        if (error) {
+          const message =
+            stdout || stderr
+              ? ["GLSL Validation failed", stdout, stderr].join("\n")
+              : error.message || "Unknown error";
+          reject(
+            new ThrowableDiagnostic({
+              diagnostic: {
+                message: message,
+              },
+            }),
+          );
+        } else {
+          if (stdout) {
+            logger.log({
+              message: md`${stdout}`,
+            });
+          }
+          if (stderr) {
+            logger.error({
+              message: md`${stderr}`,
+            });
+          }
+        }
 
-      if (stdout) {
-        logger.log({
-          message: stdout,
-        });
-      }
-      if (stderr) {
-        throw new ThrowableDiagnostic({
-          diagnostic: {
-            message: stderr,
-          },
-        });
-      }
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : (e?.toString() ?? "Unknown");
-      throw new ThrowableDiagnostic({
-        diagnostic: {
-          message: msg,
-        },
+        resolve();
       });
-    }
+    });
   },
 });
