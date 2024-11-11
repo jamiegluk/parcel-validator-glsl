@@ -16,16 +16,16 @@ export function parseValidateResult(
 
   // Merge errors that are on the same line
   errors = errors.reduce(
-    (arr, [line, err], index) => {
+    (errors, [line, err], index) => {
       if (index > 0) {
         const prevEntry = errors[index - 1]!;
         if (prevEntry[0] === line) {
           prevEntry[1] += "; " + err;
-          return arr;
+          return errors;
         }
       }
-      arr.push([line, err]);
-      return arr;
+      errors.push([line, err]);
+      return errors;
     },
     [] as typeof errors,
   );
