@@ -27,9 +27,9 @@ function parseCodeHighlightsByRegex(
 
   // Merge issues that are on the same line
   issues = issues.reduce(
-    (issues, { line, message }, index) => {
-      if (index > 0) {
-        const prevEntry = issues[index - 1]!;
+    (issues, { line, message }) => {
+      if (issues.length > 0) {
+        const prevEntry = issues[issues.length - 1]!;
         if (prevEntry.line === line) {
           prevEntry.message += "; " + message;
           return issues;
