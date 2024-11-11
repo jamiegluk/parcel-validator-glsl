@@ -141,10 +141,10 @@ export default new Validator({
               message: escapeMarkdown(stderr),
             });
           }
-        }
 
-        // Forward that validation passed
-        resolve();
+          // Forward that validation passed
+          resolve();
+        }
       });
     });
   },
