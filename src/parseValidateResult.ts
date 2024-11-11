@@ -10,32 +10,32 @@ import { name } from "~/package.json";
 
 function parseCodeHighlightsByRegex(
   createRegex: () => RegExp,
-  message: string,
+  mainMessage: string,
   lineOffset: number,
 ): [codeHighlights: DiagnosticCodeHighlight[], message: string] {
   // Match regex
-  const matches = Array.from(message.matchAll(createRegex()));
+  const matches = Array.from(mainMessage.matchAll(createRegex()));
 
   // Get issues from regex match groups
-  let issues: [line: number, message: string][] = matches.map(
+  let issues: { line: number; message: string }[] = matches.map(
     // TODO Offset line from appended code
-    ([, , line, msg]) => [
-      parseInt(line!, 10) - lineOffset,
-      msg || "Unknown issue",
-    ],
+    ([, , line, message]) => ({
+      line: parseInt(line!, 10) - lineOffset,
+      message: message || "Unknown issue",
+    }),
   );
 
   // Merge issues that are on the same line
   issues = issues.reduce(
-    (issues, [line, msg], index) => {
+    (issues, { line, message }, index) => {
       if (index > 0) {
         const prevEntry = issues[index - 1]!;
-        if (prevEntry[0] === line) {
-          prevEntry[1] += "; " + msg;
+        if (prevEntry.line === line) {
+          prevEntry.message += "; " + message;
           return issues;
         }
       }
-      issues.push([line, msg]);
+      issues.push({ line, message });
       return issues;
     },
     [] as typeof issues,
@@ -43,16 +43,16 @@ function parseCodeHighlightsByRegex(
 
   // Convert to Parcel code highlights
   const codeHighlights: DiagnosticCodeHighlight[] = issues.map(
-    ([line, msg]) => {
+    ({ line, message }) => {
       const start = { line, column: 0 };
-      return { start, end: start, message: escapeMarkdown(msg) };
+      return { start, end: start, message: escapeMarkdown(message) };
     },
   );
 
   // Strip errors out of message, they will be rendered separately
-  message = message.replaceAll(createRegex(), "");
+  mainMessage = mainMessage.replaceAll(createRegex(), "");
 
-  return [codeHighlights, message];
+  return [codeHighlights, mainMessage];
 }
 
 function parseDiagnosticByRegex(
