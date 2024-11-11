@@ -31,12 +31,6 @@
       "package.json": ["./package.json"]
     }
   },
-  "include": [
-    "typings/*.d.ts",
-    "**/*.*js",
-    "**/*.json",
-    "**/*.ts",
-    "tsup.config.ts"
-  ],
+  "include": ["typings/*.d.ts", "**/*.*js", "**/*.json", "**/*.ts"],
   "exclude": ["node_modules", "dist", "bin"]
 }
