@@ -29,6 +29,7 @@ export default new Validator({
       // So manually request such
       // @ts-expect-error -- type is missing, but function exists
       asset.invalidateOnFileChange(asset.filePath);
+      asset.invalidateOnStartup();
     }
 
     // Load and validate the config
@@ -81,15 +82,25 @@ export default new Validator({
     // Run the glslValidator command and handle the output
     return new Promise((resolve) => {
       exec(cmd, async (error, stdout, stderr) => {
+        let message: string;
         if (error) {
-          // Validation failed, return errors and warnings
-          const message =
+          // Validation failed
+          message =
             stdout || stderr
-              ? ["GLSL Validation failed", stdout, stderr].join("\n")
+              ? ["GLSL validation failed", stdout, stderr].join("\n")
               : error.message || "Unknown error";
-          resolve(parseValidateResult(message, asset, code));
         } else {
-          // Validation passed, handle any output
+          // Validation passed
+          // There may still be warnings
+          message = ["GLSL validation passed, with warnings", stdout, stderr]
+            .filter(Boolean)
+            .join("\n");
+        }
+        // Parse errors and warnings
+        const result = parseValidateResult(message, asset, code);
+
+        // Handle any output in the case no errors or warnings could be parsed
+        if (result.errors.length === 0 && result.warnings.length === 0) {
           if (stdout) {
             logger.log({
               message: escapeMarkdown(stdout),
@@ -100,11 +111,10 @@ export default new Validator({
               message: escapeMarkdown(stderr),
             });
           }
-          resolve({
-            errors: [],
-            warnings: [],
-          });
         }
+
+        // Forward the result
+        resolve(result);
       });
     });
   },

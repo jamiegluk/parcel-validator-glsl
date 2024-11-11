@@ -1,45 +1,69 @@
-import { DiagnosticCodeHighlight, escapeMarkdown } from "@parcel/diagnostic";
+import {
+  Diagnostic,
+  DiagnosticCodeHighlight,
+  escapeMarkdown,
+} from "@parcel/diagnostic";
 import { Asset, ValidateResult } from "@parcel/types";
 
-export function parseValidateResult(
+import { name } from "~/package.json";
+
+function parseCodeHighlightsByRegex(
+  createRegex: () => RegExp,
   message: string,
-  asset: Asset,
-  code: string,
-): ValidateResult {
-  // Parse errors
-  const createErrorRegex = () => /^ERROR: (.+):(\d+): (.+)$/gm;
-  const matches = Array.from(message.matchAll(createErrorRegex()));
-  let errors: [line: number, message: string][] = matches.map(
+): [codeHighlights: DiagnosticCodeHighlight[], message: string] {
+  // Match regex
+  const matches = Array.from(message.matchAll(createRegex()));
+
+  // Get issues from regex match groups
+  let issues: [line: number, message: string][] = matches.map(
     // TODO Offset line from appended code
-    ([, , line, err]) => [parseInt(line!, 10), err || "Unknown error"],
+    ([, , line, msg]) => [parseInt(line!, 10), msg || "Unknown issue"],
   );
 
-  // Merge errors that are on the same line
-  errors = errors.reduce(
-    (errors, [line, err], index) => {
+  // Merge issues that are on the same line
+  issues = issues.reduce(
+    (issues, [line, msg], index) => {
       if (index > 0) {
-        const prevEntry = errors[index - 1]!;
+        const prevEntry = issues[index - 1]!;
         if (prevEntry[0] === line) {
-          prevEntry[1] += "; " + err;
-          return errors;
+          prevEntry[1] += "; " + msg;
+          return issues;
         }
       }
-      errors.push([line, err]);
-      return errors;
+      issues.push([line, msg]);
+      return issues;
     },
-    [] as typeof errors,
+    [] as typeof issues,
   );
 
   // Convert to Parcel code highlights
-  const codeHighlights: DiagnosticCodeHighlight[] = errors.map(
-    ([line, err]) => {
+  const codeHighlights: DiagnosticCodeHighlight[] = issues.map(
+    ([line, msg]) => {
       const start = { line, column: 0 };
-      return { start, end: start, message: escapeMarkdown(err) };
+      return { start, end: start, message: escapeMarkdown(msg) };
     },
   );
 
   // Strip errors out of message, they will be rendered separately
-  message = message.replaceAll(createErrorRegex(), "");
+  message = message.replaceAll(createRegex(), "");
+
+  return [codeHighlights, message];
+}
+
+function parseDiagnosticByRegex(
+  createRegex: () => RegExp,
+  message: string,
+  asset: Asset,
+  code: string,
+): Diagnostic | null {
+  // Parse issues
+  const parsed = parseCodeHighlightsByRegex(createRegex, message);
+  const [codeHighlights] = parsed;
+  message = parsed[1];
+
+  if (codeHighlights.length === 0) {
+    return null;
+  }
 
   // Strip out "No code generated" message, as it's misleading, we aren't generating code here
   message = message.replace("No code generated.", "");
@@ -53,21 +77,41 @@ export function parseValidateResult(
 
   // Return parsed message, errors and warnings
   return {
-    warnings: [],
-    errors: [
+    origin: name,
+    message: escapeMarkdown(message),
+    documentationURL:
+      "https://www.khronos.org/opengl/wiki/Core_Language_%28GLSL%29",
+    codeFrames: [
       {
-        message: escapeMarkdown(message),
-        documentationURL:
-          "https://www.khronos.org/opengl/wiki/Core_Language_%28GLSL%29",
-        codeFrames: [
-          {
-            filePath: asset.filePath,
-            language: asset.type,
-            code,
-            codeHighlights,
-          },
-        ],
+        filePath: asset.filePath,
+        language: asset.type,
+        code,
+        codeHighlights,
       },
     ],
+  };
+}
+
+export function parseValidateResult(
+  message: string,
+  asset: Asset,
+  code: string,
+): ValidateResult {
+  // Return parsed message, errors and warnings
+  const warning = parseDiagnosticByRegex(
+    () => /^WARNING: (.+):(\d+): (.+)$/gm,
+    message,
+    asset,
+    code,
+  );
+  const error = parseDiagnosticByRegex(
+    () => /^ERROR: (.+):(\d+): (.+)$/gm,
+    message,
+    asset,
+    code,
+  );
+  return {
+    warnings: warning ? [warning] : [],
+    errors: error ? [error] : [],
   };
 }

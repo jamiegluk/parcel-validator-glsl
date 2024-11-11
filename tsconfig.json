@@ -27,8 +27,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "paths": {
-      "@/*": ["./src/*"],
-      "package.json": ["./package.json"]
+      "~/*": ["./*"],
+      "@/*": ["./src/*"]
     }
   },
   "include": ["typings/*.d.ts", "**/*.*js", "**/*.json", "**/*.ts"],
