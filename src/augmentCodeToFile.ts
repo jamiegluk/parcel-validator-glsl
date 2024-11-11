@@ -12,10 +12,17 @@ export async function augmentCodeToFile(
   let lineOffset = 0;
   let isTmpFile = false;
 
+  // Add version directive
   if (!/^#version \d+(\s|$)/.test(code)) {
     code = `#version ${config.glslVersion}\n${code}`;
     lineOffset++;
   }
+
+  // Three.js integration
+  // TODO
+
+  // Three-CustomShaderMaterial integration
+  // TODO
 
   if (lineOffset) {
     const { name, ext } = path.parse(filePath);
