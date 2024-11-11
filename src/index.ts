@@ -47,6 +47,7 @@ export default new Validator({
     return new Promise((resolve, reject) => {
       exec(cmd, (error, stdout, stderr) => {
         if (error) {
+          // Validation failed
           const message =
             stdout || stderr
               ? ["GLSL Validation failed", stdout, stderr].join("\n")
@@ -59,6 +60,7 @@ export default new Validator({
             }),
           );
         } else {
+          // Validation passed, handle any output
           if (stdout) {
             logger.log({
               message: md`${stdout}`,
@@ -71,6 +73,7 @@ export default new Validator({
           }
         }
 
+        // Forward that validation passed
         resolve();
       });
     });
