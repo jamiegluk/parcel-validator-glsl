@@ -8,7 +8,7 @@ export interface Config {
 }
 
 export const DEFAULT_CONFIG = {
-  glslVersion: 130,
+  glslVersion: 110,
   commandArguments: "",
   threeIntegration: false,
   csmIntegration: false,
