@@ -78,7 +78,7 @@ export default new Validator({
 
     // TODO append to code
     const code = await asset.getCode();
-    const [filePath, lineOffset] = await augmentCodeToFile(
+    const [filePath, lineOffset, isTmpFile] = await augmentCodeToFile(
       asset,
       config,
       options,
@@ -91,6 +91,13 @@ export default new Validator({
     // Run the glslValidator command and handle the output
     return new Promise((resolve) => {
       exec(cmd, async (error, stdout, stderr) => {
+        // Clean up temp file
+        if (isTmpFile) {
+          try {
+            await asset.fs.rimraf(filePath);
+          } catch {}
+        }
+
         let message: string;
         if (error) {
           // Validation failed
