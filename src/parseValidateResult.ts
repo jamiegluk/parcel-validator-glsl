@@ -18,7 +18,6 @@ function parseCodeHighlightsByRegex(
 
   // Get issues from regex match groups
   let issues: { line: number; message: string }[] = matches.map(
-    // TODO Offset line from appended code
     ([, , line, message]) => ({
       line: parseInt(line!, 10) - lineOffset,
       message: message || "Unknown issue",
