@@ -29,6 +29,8 @@ export default new Validator({
       // So manually request such
       // @ts-expect-error -- type is missing, but function exists
       asset.invalidateOnFileChange(asset.filePath);
+      // Nor does it rerun when the build is restarted
+      // @ts-expect-error -- type is missing, but function exists
       asset.invalidateOnStartup();
     }
 
