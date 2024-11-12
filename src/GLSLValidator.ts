@@ -14,7 +14,7 @@ const req = createRequire(__dirname);
 /**
  * Parcel validator plugin for GLSL files.
  */
-export const GLSLValidator = new Validator({
+export const GLSLValidator = new Validator<Required<Config>>({
   async getConfig({ asset, resolveConfig, options }) {
     const configNames = [
       "parcel-validator-glsl.config.json",
