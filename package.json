@@ -70,7 +70,7 @@
     "postversion": "Pushes Git"
   },
   "scripts": {
-    "start": "build --watch",
+    "start": "watch",
     "build": "parcel build",
     "watch": "parcel watch",
     "clean": "run-s clean:*",
