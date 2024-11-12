@@ -54,5 +54,6 @@
   // but can be calculated from viewMatrix * modelMatrix.
   //
   // Basic Usage:
-  // gl_Position = projectionMatrix * viewMatrix * modelMatrix * instanceMatrix * vec4(position, 1.0); attribute mat4 instanceMatrix;
+  // gl_Position = projectionMatrix * viewMatrix * modelMatrix * instanceMatrix * vec4(position, 1.0);
+  attribute mat4 instanceMatrix;
 #endif
