@@ -70,7 +70,7 @@ You can exclude files from validation using either of these methods:
    // parcel-validator-glsl no-validate
    ```
 
-2. **Apply to all files with a config:** \
+2. **Via a config:** \
    Set the "exclude" config in _parcel-validator-glsl.config.json_:
 
    ```json
