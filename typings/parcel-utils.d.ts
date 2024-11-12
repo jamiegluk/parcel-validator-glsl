@@ -1,6 +1,7 @@
 declare module "@parcel/utils" {
-  import type { ConfigResult, File, FilePath } from "@parcel/types";
+  import type { ConfigResult, File, FilePath, Glob } from "@parcel/types";
   import type { FileSystem } from "@parcel/fs";
+  import type { Options } from "micromatch";
 
   // config
   // https://github.com/parcel-bundler/parcel/blob/9242243c9af6f593f76ef4e44bc0d88b826126ab/packages/core/utils/src/config.js
@@ -22,4 +23,12 @@ declare module "@parcel/utils" {
     projectRoot: FilePath,
     opts?: ConfigOptions,
   ): Promise<ConfigOutput | null>;
+
+  // glob
+  // https://github.com/parcel-bundler/parcel/blob/9242243c9af6f593f76ef4e44bc0d88b826126ab/packages/core/utils/src/glob.js
+  export function isGlobMatch(
+    filePath: FilePath,
+    glob: Glob | Array<Glob>,
+    opts?: Options,
+  ): any;
 }

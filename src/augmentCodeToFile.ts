@@ -112,7 +112,7 @@ export async function augmentCodeToFile(
  * @param suffix Value of `foo` in `// parcel-validator-glsl foo`.
  * @returns `true` if comment exists, else `false`.
  */
-function hasPluginComment(code: string, suffix: string): boolean {
+export function hasPluginComment(code: string, suffix: string): boolean {
   return new RegExp(
     `// parcel-validator-glsl ${regexEscape(suffix)}\\s*$`,
     "m",

@@ -59,6 +59,28 @@ This is useful for things like Three.js shaders, that may prepend your GLSL file
 
 This plugin supports a configuration file in the root of your repo called _parcel-validator-glsl.config.json_ or _parcel-validator-glsl.config.js_.
 
+### Exclude Files
+
+You can exclude files from validation using either of these methods:
+
+1. **Via a comment in files:** \
+   Add this comment anywhere in the shader file:
+
+   ```glsl
+   // parcel-validator-glsl no-validate
+   ```
+
+2. **Apply to all files with a config:** \
+   Set the "exclude" config in _parcel-validator-glsl.config.json_:
+
+   ```json
+   {
+     "exclude": ["foo.frag", "*.bar.vert"]
+   }
+   ```
+
+   This is an array of file GLOB patterns.
+
 ### GLSL Version
 
 GLSL files are validated as version 1.10 by default. You can change the version using either of these methods:

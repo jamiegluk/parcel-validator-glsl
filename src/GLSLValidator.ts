@@ -1,10 +1,10 @@
 import ThrowableDiagnostic, { escapeMarkdown } from "@parcel/diagnostic";
 import { Validator } from "@parcel/plugin";
 // @ts-ignore -- Parcel can't seem to recognize the typings for this, but Typescript does
-import { loadConfig } from "@parcel/utils";
+import { isGlobMatch, loadConfig } from "@parcel/utils";
 import { exec } from "node:child_process";
 import { createRequire } from "node:module";
-import { augmentCodeToFile } from "./augmentCodeToFile";
+import { augmentCodeToFile, hasPluginComment } from "./augmentCodeToFile";
 import { Config, DEFAULT_CONFIG, validateConfig } from "./config";
 import { parseValidateResult } from "./parseValidateResult";
 
@@ -77,8 +77,15 @@ export const GLSLValidator = new Validator({
     validator = req.resolve(validator);
 
     // Load code
+    // handle exclusions
     // and inject any extra code for validation to satisfy configurations and integrations
     const code = await asset.getCode();
+    if (
+      hasPluginComment(code, "no-validate") ||
+      isGlobMatch(asset.filePath, config.exclude)
+    ) {
+      return;
+    }
     const [filePath, lineOffset, isTmpFile] = await augmentCodeToFile(
       asset,
       config,

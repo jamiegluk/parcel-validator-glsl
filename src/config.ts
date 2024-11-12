@@ -6,6 +6,11 @@ import ThrowableDiagnostic from "@parcel/diagnostic";
  */
 export interface Config {
   /**
+   * Exclude files from validation.
+   * This is an array of file GLOB patterns.
+   */
+  exclude?: string[];
+  /**
    * Default GLSL version to validate files with.
    * `#version` directives will override this.
    * @see https://www.khronos.org/opengl/ wiki/Core_Language_(GLSL)#Version
@@ -34,6 +39,7 @@ export interface Config {
  * Default values for {@link Config}.
  */
 export const DEFAULT_CONFIG = {
+  exclude: [],
   glslVersion: 110,
   commandArguments: "",
   threeIntegration: false,
