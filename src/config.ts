@@ -66,6 +66,12 @@ function configError(key: string, type: string): never {
  * @throws An {@link ThrowableDiagnostic} error if any property is invalid.
  */
 export function validateConfig(config: Required<Config>): void {
+  if (
+    !Array.isArray(config.exclude) ||
+    config.exclude.some((x) => typeof x !== "string")
+  ) {
+    configError("exclude", "string[]");
+  }
   if (typeof config.commandArguments !== "string") {
     configError("commandArguments", "string");
   }
