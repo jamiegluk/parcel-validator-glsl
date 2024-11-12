@@ -8,8 +8,6 @@ Parcel supports GLSL files via [@parcel/transformer-glsl](https://parceljs.org/l
 
 <br/>
 
-## Prerequisites
-
 ## Installation
 
 Install parcel-validator-glsl in your repo via NPM:
