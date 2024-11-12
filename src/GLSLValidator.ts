@@ -8,7 +8,7 @@ import { Config, DEFAULT_CONFIG, validateConfig } from "./config";
 import { parseValidateResult } from "./parseValidateResult";
 import { augmentCodeToFile } from "./augmentCodeToFile";
 
-// Workaround https://github.com/parcel-bundler/parcel/issues/6925#issuecomment-1003935487
+// Workaround for https://github.com/parcel-bundler/parcel/issues/6925#issuecomment-1003935487
 const req = createRequire(__dirname);
 
 /**
@@ -76,7 +76,8 @@ export const GLSLValidator = new Validator({
     // Resolve path to validator
     validator = req.resolve(validator);
 
-    // TODO append to code
+    // Load code
+    // and inject any extra code for validation to satisfy configurations and integrations
     const code = await asset.getCode();
     const [filePath, lineOffset, isTmpFile] = await augmentCodeToFile(
       asset,
@@ -88,7 +89,7 @@ export const GLSLValidator = new Validator({
     // Add standard arguments and options
     const cmd = `"${validator}" -l -DVALIDATE ${config.commandArguments} "${filePath}"`;
 
-    // Run the glslValidator command and handle the output
+    // Run the `glslValidator` command and handle the output
     return new Promise((resolve) => {
       exec(cmd, async (error, stdout, stderr) => {
         // Clean up temp file
