@@ -1,8 +1,8 @@
 import { Asset, PluginOptions } from "@parcel/types";
-import { Config } from "./config";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import regexEscape from "regex-escape";
+import { Config } from "./config";
 
 /**
  * Injects additional code into the asset's code,

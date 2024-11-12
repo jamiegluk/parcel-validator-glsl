@@ -2,11 +2,11 @@ import ThrowableDiagnostic, { escapeMarkdown } from "@parcel/diagnostic";
 import { Validator } from "@parcel/plugin";
 // @ts-ignore -- Parcel can't seem to recognize the typings for this, but Typescript does
 import { loadConfig } from "@parcel/utils";
-import { exec } from "child_process";
-import { createRequire } from "module";
+import { exec } from "node:child_process";
+import { createRequire } from "node:module";
+import { augmentCodeToFile } from "./augmentCodeToFile";
 import { Config, DEFAULT_CONFIG, validateConfig } from "./config";
 import { parseValidateResult } from "./parseValidateResult";
-import { augmentCodeToFile } from "./augmentCodeToFile";
 
 // Workaround for https://github.com/parcel-bundler/parcel/issues/6925#issuecomment-1003935487
 const req = createRequire(__dirname);
