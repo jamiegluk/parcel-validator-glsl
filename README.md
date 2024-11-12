@@ -39,6 +39,8 @@ Add "parcel-validator-glsl" validator to your _.parcelrc_ file:
 }
 ```
 
+You **must** use specific file extensions that correspond to the shader stages, see [supported file extensions](https://github.com/KhronosGroup/glslang?tab=readme-ov-file#execution-of-standalone-wrapper).
+
 ## Adding code only run during validation
 
 A `VALIDATE` pre-processor macro is defined when running the validator.
