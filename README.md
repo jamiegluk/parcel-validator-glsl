@@ -86,7 +86,7 @@ You can exclude files from validation using either of these methods:
 GLSL files are validated as version 1.10 by default. You can change the version using either of these methods:
 
 1. **Specific files via a comment:** \
-   Add a `#version` directive at the top of your GLSL files, ie. `#version 130`. See [this documentation](<https://www.khronos.org/opengl/ wiki/Core_Language_(GLSL)#Version>) for more info.
+   Add a `#version` directive at the top of your GLSL files, ie. `#version 130`. See [this documentation](<https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)#Version>) for more info.
 
    If you do this, you may also wish to use the [parcel-optimizer-glsl-remove-version](https://www.npmjs.com/package/parcel-optimizer-glsl-remove-version) package to avoid `#version directive must occur before anything else, except for comments and white space` errors.
 
