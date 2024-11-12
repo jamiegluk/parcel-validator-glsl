@@ -112,7 +112,7 @@ You can implement this using either of these methods:
 
 ### THREE-CustomShaderMaterial
 
-This plugin has inbuilt support for [THREE-CustomShaderMaterial](https://github.com/FarazzShaikh/THREE-CustomShaderMaterial). This ensures the uniforms and attributes that `CustomShaderMaterial` injects into your shaders are known to the validator. You can see a list of these in the [CSM documentation](https://github.com/FarazzShaikh/THREE-CustomShaderMaterial?tab=readme-ov-file#output-variables).
+This plugin has inbuilt support for [THREE-CustomShaderMaterial](https://github.com/FarazzShaikh/THREE-CustomShaderMaterial). This ensures the output variables that `CustomShaderMaterial` injects into your shaders are known to the validator. You can see a list of these in the [CSM documentation](https://github.com/FarazzShaikh/THREE-CustomShaderMaterial?tab=readme-ov-file#output-variables).
 
 You can implement this using either of these methods:
 

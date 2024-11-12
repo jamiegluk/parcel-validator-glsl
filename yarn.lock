@@ -369,7 +369,7 @@
   dependencies:
     "@parcel/plugin" "2.12.0"
 
-"@parcel/config-default@2.12.0":
+"@parcel/config-default@2.12.0", "@parcel/config-default@^2.12.0":
   version "2.12.0"
   resolved "https://registry.yarnpkg.com/@parcel/config-default/-/config-default-2.12.0.tgz#7b213348db349c6042a80dfd4a7eab707a1dfbfa"
   integrity sha512-dPNe2n9eEsKRc1soWIY0yToMUPirPIa2QhxcCB3Z5RjpDGIXm0pds+BaiqY6uGLEEzsjhRO0ujd4v2Rmm0vuFg==
@@ -851,7 +851,7 @@
     posthtml-render "^3.0.0"
     semver "^7.5.2"
 
-"@parcel/transformer-raw@2.12.0":
+"@parcel/transformer-raw@2.12.0", "@parcel/transformer-raw@^2.12.0":
   version "2.12.0"
   resolved "https://registry.yarnpkg.com/@parcel/transformer-raw/-/transformer-raw-2.12.0.tgz#1ee7e02214f777cf3a5bf53580ee4dadfaf8a44c"
   integrity sha512-Ht1fQvXxix0NncdnmnXZsa6hra20RXYh1VqhBYZLsDfkvGGFnXIgO03Jqn4Z8MkKoa0tiNbDhpKIeTjyclbBxQ==
