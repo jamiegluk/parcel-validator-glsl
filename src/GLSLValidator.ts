@@ -53,7 +53,7 @@ export const GLSLValidator = new Validator({
   async validate({ asset, logger, config: _config, options }) {
     const config = _config as Readonly<Required<Config>>;
 
-    // Get OS independent path to validator
+    // Get OS dependent path to validator
     let validator = "glslang-validator-prebuilt-predownloaded/bin/";
     switch (process.platform) {
       case "darwin":
