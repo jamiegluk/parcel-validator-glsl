@@ -47,10 +47,9 @@
   ],
   "engines": {
     "node": ">= 12.2.0",
-    "parcel": "2.x",
-    "yarn": ">=1.22.19 <2"
+    "parcel": "2.x"
   },
-  "packageManager": "yarn@1.22.19",
+  "packageManager": "yarn@1.22.22",
   "scriptshelp": {
     "help-message": "Parcel validator plugin for GLSL files",
     "start": "Builds in watch mode",
