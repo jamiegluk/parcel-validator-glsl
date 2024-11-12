@@ -8,6 +8,16 @@ import regexEscape from "regex-escape";
 
 import { name } from "~/package.json";
 
+/**
+ * Parses the output of the `gslangValidator` command into
+ * a list of Parcel validator {@link DiagnosticCodeHighlight}s for just warnings *or* errors.
+ * @param createRegex Function creating a regular expression to match the issues (warnings *or* errors) in the output.
+ * @param mainMessage Output of `gslangValidator` command (`stdout` and `stderr` joined).
+ * @param lineOffset Count of lines that were injected into the code.
+ * @returns Tuple of:
+ *   1. Parcel validator {@link DiagnosticCodeHighlight} with parsed issues (warnings *or* errors).
+ *   2. Parsed message, with above highlighted code issues removed.
+ */
 function parseCodeHighlightsByRegex(
   createRegex: () => RegExp,
   mainMessage: string,
@@ -54,6 +64,17 @@ function parseCodeHighlightsByRegex(
   return [codeHighlights, mainMessage];
 }
 
+/**
+ * Parses the output of the `gslangValidator` command into
+ * a Parcel validator {@link Diagnostic} for just warnings *or* errors.
+ * @param createRegex Function creating a regular expression to match the issues (warnings *or* errors) in the output.
+ * @param message Output of `gslangValidator` command (`stdout` and `stderr` joined).
+ * @param asset Parcel asset.
+ * @param code Original asset code, without additional code injected.
+ * @param filePath File path of the temporary modified asset, or the original asset if no code was injected.
+ * @param lineOffset Count of lines that were injected into the code.
+ * @returns Parcel validator {@link Diagnostic} with parsed message and issues.
+ */
 function parseDiagnosticByRegex(
   createRegex: () => RegExp,
   message: string,
@@ -104,6 +125,16 @@ function parseDiagnosticByRegex(
   };
 }
 
+/**
+ * Parses the output of the `gslangValidator` command into
+ * a Parcel validator {@link ValidateResult}.
+ * @param message Output of `gslangValidator` command (`stdout` and `stderr` joined).
+ * @param asset Parcel asset.
+ * @param code Original asset code, without additional code injected.
+ * @param filePath File path of the temporary modified asset, or the original asset if no code was injected.
+ * @param lineOffset Count of lines that were injected into the code.
+ * @returns Parcel validator {@link ValidateResult} with parsed message, errors and warnings.
+ */
 export function parseValidateResult(
   message: string,
   asset: Asset,
