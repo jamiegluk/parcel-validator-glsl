@@ -101,7 +101,7 @@ GLSL files are validated as version 1.10 by default. You can change the version 
 
 ### Additional Command Arguments
 
-You can define additional `glslangValidator` command line options and arguments by setting the "commandArguments" config in :
+You can define additional `glslangValidator` command line options and arguments by setting the "commandArguments" config in _parcel-validator-glsl.config.json_:
 
 ```json
 {
