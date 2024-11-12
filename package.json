@@ -96,7 +96,7 @@
     "@parcel/transformer-typescript-types": "2.12.0",
     "@parcel/types": "^2.12.0",
     "@types/micromatch": "^4.0.9",
-    "@types/node": "22.8.7",
+    "@types/node": "22.9.0",
     "@types/regex-escape": "^3.4.1",
     "@typescript-eslint/eslint-plugin": "^7.4.0",
     "@typescript-eslint/parser": "^7.4.0",
