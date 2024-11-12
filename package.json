@@ -40,6 +40,11 @@
   "files": [
     "./dist"
   ],
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
   "engines": {
     "node": ">= 12.0.0",
     "parcel": "2.x",
