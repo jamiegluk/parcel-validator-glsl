@@ -12,7 +12,7 @@ import { augmentCodeToFile } from "./augmentCodeToFile";
 const req = createRequire(__dirname);
 
 /**
- * Parcel optimizer plugin to remove the #version directive from GLSL files.
+ * Parcel validator plugin for GLSL files.
  */
 export const GLSLValidator = new Validator({
   async getConfig({ asset, resolveConfig, options }) {
