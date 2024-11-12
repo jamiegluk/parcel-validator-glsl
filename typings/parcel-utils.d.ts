@@ -12,13 +12,13 @@ declare module "@parcel/utils" {
 
   export type ConfigOptions = {
     parse?: boolean;
-    parser?: (arg: string) => any;
+    parser?: <T>(arg: string) => T;
   };
 
   export function loadConfig(
     fs: FileSystem,
     filepath: FilePath,
-    filenames: Array<FilePath>,
+    filenames: FilePath[],
     projectRoot: FilePath,
     opts?: ConfigOptions,
   ): Promise<ConfigOutput | null>;

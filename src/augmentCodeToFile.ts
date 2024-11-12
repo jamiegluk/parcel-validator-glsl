@@ -114,7 +114,7 @@ export async function augmentCodeToFile(
  */
 function hasPluginComment(code: string, suffix: string): boolean {
   return new RegExp(
-    `// parcel-validator-glsl ${regexEscape(suffix)}\s*$`,
+    `// parcel-validator-glsl ${regexEscape(suffix)}\\s*$`,
     "m",
   ).test(code);
 }

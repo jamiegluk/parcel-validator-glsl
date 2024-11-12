@@ -44,7 +44,7 @@ export const GLSLValidator = new Validator({
     );
     const config: Required<Config> = {
       ...DEFAULT_CONFIG,
-      ...(loadedConfig?.config ?? {}),
+      ...((loadedConfig?.config as Config) ?? {}),
     };
     validateConfig(config);
     return config;
@@ -96,7 +96,9 @@ export const GLSLValidator = new Validator({
         if (isTmpFile) {
           try {
             await asset.fs.rimraf(filePath);
-          } catch {}
+          } catch {
+            // Pass
+          }
         }
 
         let message: string;
