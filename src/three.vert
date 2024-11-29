@@ -22,12 +22,14 @@
 
   // USE_TANGENT
   attribute vec4 tangent;
-  // USE_COLOR_ALPHA
-  // vertex color attribute with alpha
-  attribute vec4 color;
-  // USE_COLOR
-  // vertex color attribute
-  // attribute vec3 color;
+  #ifndef VALIDATE_THREE_NO_COLOR
+    // USE_COLOR_ALPHA
+    // vertex color attribute with alpha
+    attribute vec4 color;
+    // USE_COLOR
+    // vertex color attribute
+    // attribute vec3 color;
+  #endif
 
   // USE_MORPHTARGETS
   attribute vec3 morphTarget0;
