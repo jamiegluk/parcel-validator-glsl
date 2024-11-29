@@ -155,6 +155,38 @@ You can implement this using either of these methods:
    // parcel-validator-glsl no-csm
    ```
 
+---
+
+## Known Issues
+
+- Errors are not shown after a rebuild if the GLSL file has not been modified. \
+  To workaround this, either:
+  - Modify the GLSL file.
+  - Clear the Parcel cache by deleting the `.parcel-cache` dir in the root of your repo.
+- The [Three.js integration](#threejs) defines `color` attribute as a `vec4` (with alpha), your material may not use an alpha channel on the color. \
+  To workaround this, add this to _parcel-validator-glsl.config.json_:
+  ```json
+  {
+    "commandArguments": "-DVALIDATE_THREE_NO_COLOR"
+  }
+  ```
+  And add this code to your vertex shader:
+  ```glsl
+  #ifdef VALIDATE
+    // Three.js vertex color attribute
+    attribute vec3 color;
+  #endif
+  ```
+  Vertex shaders that do use color with an alpha channel will then need this code:
+  ```glsl
+  #ifdef VALIDATE
+    // Three.js vertex color attribute with alpha
+    attribute vec4 color;
+  #endif
+  ```
+- The [THREE-CustomShaderMaterial integration](#three-customshadermaterial) only includes builtin support for its export variables. The uniforms, attributes, variables and functions defined by the particular Three shader you choose to override will not be known by the validator. \
+  To workaround this, you can define them yourself, see [adding code only run during validation](#adding-code-only-run-during-validation).
+
 <br/>
 
 ---
